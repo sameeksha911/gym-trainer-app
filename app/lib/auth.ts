@@ -1,22 +1,18 @@
 "use client"
 
-import { account } from "./appwrite-client"
-
-export type UserRole = "trainer" | "client" | null
-
-export async function login(email: string, password: string) {
-  await account.createEmailPasswordSession(email, password)
-  return true
+export function setAuth(role: "trainer" | "client") {
+  localStorage.setItem("role", role)
 }
 
-export async function logout() {
-  await account.deleteSession("current")
+export function getAuth() {
+  if (typeof window === "undefined") return null
+  return localStorage.getItem("role")
 }
 
-export async function getCurrentUser() {
-  try {
-    return await account.get()
-  } catch {
-    return null
-  }
+export function clearAuth() {
+  localStorage.removeItem("role")
+}
+
+export function isAuthenticated() {
+  return !!getAuth()
 }
